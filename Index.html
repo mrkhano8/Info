@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google AdSense / AdMob Web Script -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-app-pub-9658813986535745~4097498428"
+     crossorigin="anonymous"></script>
+     
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+      google_ad_client: "ca-app-pub-9658813986535745~4097498428",
+      enable_page_level_ads: true
+    });
+  </script>
+  <meta name="description" content="Track global population growth, deaths, and statistics and compair countries easily with our interactive population counter website. View country-wise population, graphs, and detailed insights.">
+  <meta name="keywords" content="population counter, total population of india, population statistics, global population, countries compriser,world population, country population, population growth, deaths, birth counter, world stats, population tracker">
+  <meta name="author" content="muneeb ur Rahman">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Population Stats</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8f8f8;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    /* Header */
+    header {
+      background: white;
+      padding: 15px 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Title */
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      flex: 1;  /* Allows it to take available space */
+      min-width: 150px;
+    }
+
+    /* Search Bar */
+    #search {
+      padding: 10px;
+      flex: 2;
+      min-width: 200px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    #fact-button {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #fact-button:hover {
+      background: #27ae60;
+    }
+
+    #fact-box {
+      text-align: center;
+      margin: 20px auto;
+      font-size: 18px;
+      font-weight: bold;
+      background: #ecf0f1;
+      padding: 15px;
+      border-radius: 8px;
+      display: none; /* Initially hidden */
+      max-width: 800px;
+    }
+
+    /* Stats Section */
+    .stats {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-box {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .stat-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-box h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 5px 0;
+      color: #333;
+    }
+
+    .stat-box p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Country List */
+    #country-list {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 15px;
+    }
+
+    .country {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      transition: 0.3s;
+      text-align: left;
+    }
+
+    .country:hover {
+      transform: translateY(-5px);
+    }
+
+    .country h2 {
+      margin-top: 0;
+      color: #34495e;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    /* Footer */
+    footer {
+      background: #34495e;
+      padding: 15px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: white;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin: 20px auto;
+      max-width: 800px;
+    }
+
+    .tab {
+      padding: 10px 20px;
+      background: white;
+      border: none;
+      border-radius: 5px;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .tab.active {
+      background: #34495e;
+      color: white;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Comparison Section */
+    .comparison {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .comparison h2 {
+      margin-top: 0;
+      color: #34495e;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+
+    .comparison select {
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      margin: 10px;
+    }
+
+    .comparison .compare-button {
+      background: #2ecc71;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .comparison .compare-button:hover {
+      background: #27ae60;
+    }
+
+    .comparison .comparison-results {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .comparison .comparison-results .country {
+      flex: 1;
+      margin: 0 10px;
+      text-align: center;
+    }
+
+    .comparison .comparison-results .country h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .comparison .comparison-results .country p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    .comparison .summary {
+      margin-top: 20px;
+      padding: 15px;
+      background: #ecf0f1;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .comparison .summary h3 {
+      margin-top: 0;
+      color: #34495e;
+    }
+
+    .comparison .summary p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      h1, #search, #fact-button {
+        width: 100%;
+      }
+
+      #search {
+        margin-top: 10px;
+      }
+
+      #fact-button {
+        margin-top: 10px;
+      }
+      
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      
+      #country-list {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison .comparison-results {
+        flex-direction: column;
+      }
+
+      .comparison .comparison-results .country {
+        margin: 10px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1> World Status </h1>
+    <input type="text" id="search" placeholder="Search Country...">
+    <button id="fact-button">Fun Fact</button>
+  </header>
+
+  <div id="fact-box"></div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="global">Global Stats</button>
+    <button class="tab" data-tab="countries">Countries</button>
+    <button class="tab" data-tab="compare">Compare Countries</button>
+  </div>
+  <div style="margin: 20px auto; text-align: center;">
+  </div>
+
+  <div id="global-stats" class="tab-content active">
+    <section class="stats">
+      <div class="stat-box">
+        <h2 id="global-pop">8,045,311,447</h2>
+        <p>Current World Population</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="births-year">140,000,000</h2>
+        <p>Births this Year</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="births-today">385,000</h2>
+        <p>Births Today</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="deaths-year">60,000,000</h2>
+        <p>Deaths this Year</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="deaths-today">165,000</h2>
+        <p>Deaths Today</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="growth-year">80,000,000</h2>
+        <p>Net Population Growth this Year</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="growth-today">220,000</h2>
+        <p>Net Population Growth Today</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="life-expectancy">73.2</h2>
+        <p>Global Life Expectancy (Years)</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="urban-population">57%</h2>
+        <p>Urban Population</p>
+      </div>
+
+      <div class="stat-box">
+        <h2 id="median-age">31</h2>
+        <p>Median Age (Years)</p>
+      </div>
+    </section>
+  </div>
+
+  <div id="countries-tab" class="tab-content">
+    <div id="country-list"></div>
+  </div>
+
+  <div id="compare-tab" class="tab-content">
+    <div class="comparison">
+      <h2>Compare Countries</h2>
+      <select id="country1">
+        <option value="">Select Country 1</option>
+      </select>
+      <select id="country2">
+        <option value="">Select Country 2</option>
+      </select>
+      <button class="compare-button">Compare</button>
+      <div class="comparison-results">
+        <div class="country" id="compare-country1"></div>
+        <div class="country" id="compare-country2"></div>
+      </div>
+      <div class="summary">
+        <h3>Summary</h3>
+        <p id="summary-text"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AdMob / AdSense Banner Ad -->
+  <ins class="adsbygoogle"
+       style="display:block; text-align:center;"
+       data-ad-client="ca-app-pub-9658813986535745~4097498428"
+       data-ad-slot="4376738017"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  <footer>© 2025 Population Tracker</footer>
+  <script>
+    const factButton = document.getElementById('fact-button');
+    const factBox = document.getElementById('fact-box');
+
+    const funFacts = [
+      "China and India together make up over 35% of the world's population!",
+      "The world's population grows by about 80 million people each year.",
+      "Nigeria is projected to surpass the United States in population by 2050.",
+      "Japan has one of the highest life expectancies in the world at around 84 years.",
+      "The least populated country in the world is Vatican City, with about 800 residents.",
+      "More than half of the world's population lives in just 10 countries.",
+      "By 2050, Africa's population is expected to double!",
+      "The fastest-growing country by population percentage is Niger.",
+      "India is expected to surpass China as the most populous country soon!",
+      "Over 250 babies are born every minute worldwide!"
+    ];
+
+    // Function to show a random fun fact
+    factButton.addEventListener('click', () => {
+      const randomIndex = Math.floor(Math.random() * funFacts.length);
+      factBox.textContent = funFacts[randomIndex];
+      factBox.style.display = 'block'; // Show the fact box
+    });
+
+    // Tab functionality
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        
+        // Remove active class from all tabs and content
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        
+        // Add active class to current tab and content
+        tab.classList.add('active');
+        if (tabId === 'global') {
+          document.getElementById('global-stats').classList.add('active');
+        } else if (tabId === 'countries') {
+          document.getElementById('countries-tab').classList.add('active');
+        } else if (tabId === 'compare') {
+          document.getElementById('compare-tab').classList.add('active');
+        }
+      });
+    });
+
+    // Countries data
+    document.addEventListener("DOMContentLoaded", function () {
+      const countries = [
+    { name: "China", population: 1444216107, birthRate: 7.5, deathRate: 7, lifeExpectancy: 77, urbanPopulation: 61, medianAge: 38 },
+    { name: "India", population: 1417173173, birthRate: 18, deathRate: 7, lifeExpectancy: 70, urbanPopulation: 35, medianAge: 28 },
+    { name: "United States", population: 336997624, birthRate: 12, deathRate: 8, lifeExpectancy: 79, urbanPopulation: 83, medianAge: 38 },
+    { name: "Indonesia", population: 277184719, birthRate: 17, deathRate: 7, lifeExpectancy: 72, urbanPopulation: 56, medianAge: 30 },
+    { name: "Pakistan", population: 240485658, birthRate: 27, deathRate: 7, lifeExpectancy: 67, urbanPopulation: 37, medianAge: 23 },
+    { name: "Nigeria", population: 223804632, birthRate: 38, deathRate: 12, lifeExpectancy: 55, urbanPopulation: 52, medianAge: 18 },
+    { name: "Brazil", population: 216422446, birthRate: 13, deathRate: 7, lifeExpectancy: 76, urbanPopulation: 87, medianAge: 33 },
+    { name: "Bangladesh", population: 172954319, birthRate: 18, deathRate: 5, lifeExpectancy: 73, urbanPopulation: 38, medianAge: 27 },
+    { name: "Russia", population: 144713314, birthRate: 10, deathRate: 13, lifeExpectancy: 72, urbanPopulation: 74, medianAge: 40 },
+    { name: "Mexico", population: 134127967, birthRate: 17, deathRate: 6, lifeExpectancy: 75, urbanPopulation: 81, medianAge: 29 },
+    { name: "Japan", population: 123294513, birthRate: 8, deathRate: 12, lifeExpectancy: 84, urbanPopulation: 92, medianAge: 48 },
+    { name: "Ethiopia", population: 126527060, birthRate: 32, deathRate: 7, lifeExpectancy: 66, urbanPopulation: 22, medianAge: 20 },
+    { name: "Philippines", population: 117337368, birthRate: 22, deathRate: 6, lifeExpectancy: 71, urbanPopulation: 47, medianAge: 25 },
+    { name: "Egypt", population: 112716598, birthRate: 25, deathRate: 6, lifeExpectancy: 72, urbanPopulation: 43, medianAge: 25 },
+    { name: "Vietnam", population: 98186856, birthRate: 15, deathRate: 6, lifeExpectancy: 75, urbanPopulation: 37, medianAge: 32 },
+    { name: "DR Congo", population: 95240792, birthRate: 42, deathRate: 10, lifeExpectancy: 60, urbanPopulation: 45, medianAge: 17 },
+    { name: "Turkey", population: 85561976, birthRate: 15, deathRate: 6, lifeExpectancy: 77, urbanPopulation: 76, medianAge: 32 },
+    { name: "Iran", population: 85028748, birthRate: 17, deathRate: 5, lifeExpectancy: 76, urbanPopulation: 75, medianAge: 31 },
+    { name: "Germany", population: 83783942, birthRate: 9, deathRate: 11, lifeExpectancy: 81, urbanPopulation: 77, medianAge: 46 },
+    { name: "Thailand", population: 71601103, birthRate: 10, deathRate: 8, lifeExpectancy: 77, urbanPopulation: 51, medianAge: 40 },
+    { name: "United Kingdom", population: 67530172, birthRate: 11, deathRate: 9, lifeExpectancy: 81, urbanPopulation: 83, medianAge: 40 },
+    { name: "France", population: 65426179, birthRate: 12, deathRate: 9, lifeExpectancy: 82, urbanPopulation: 81, medianAge: 42 },
+    { name: "Italy", population: 60367477, birthRate: 7, deathRate: 11, lifeExpectancy: 83, urbanPopulation: 69, medianAge: 47 },
+    { name: "South Africa", population: 59893885, birthRate: 20, deathRate: 9, lifeExpectancy: 64, urbanPopulation: 67, medianAge: 28 },
+    { name: "Tanzania", population: 63588334, birthRate: 37, deathRate: 7, lifeExpectancy: 65, urbanPopulation: 35, medianAge: 18 },
+    { name: "Myanmar", population: 54817919, birthRate: 18, deathRate: 8, lifeExpectancy: 67, urbanPopulation: 31, medianAge: 29 },
+    { name: "Kenya", population: 54027487, birthRate: 28, deathRate: 6, lifeExpectancy: 66, urbanPopulation: 28, medianAge: 20 },
+    { name: "South Korea", population: 51305184, birthRate: 6, deathRate: 6, lifeExpectancy: 83, urbanPopulation: 82, medianAge: 44 },
+    { name: "Colombia", population: 51516562, birthRate: 16, deathRate: 6, lifeExpectancy: 77, urbanPopulation: 80, medianAge: 31 },
+    { name: "Spain", population: 46733038, birthRate: 7, deathRate: 9, lifeExpectancy: 83, urbanPopulation: 80, medianAge: 45 },
+    { name: "Argentina", population: 45510318, birthRate: 16, deathRate: 8, lifeExpectancy: 77, urbanPopulation: 92, medianAge: 32 },
+    { name: "Uganda", population: 45853778, birthRate: 42, deathRate: 6, lifeExpectancy: 63, urbanPopulation: 25, medianAge: 16 },
+    { name: "Ukraine", population: 43192192, birthRate: 9, deathRate: 14, lifeExpectancy: 72, urbanPopulation: 69, medianAge: 41 },
+    { name: "Algeria", population: 44903225, birthRate: 22, deathRate: 5, lifeExpectancy: 77, urbanPopulation: 73, medianAge: 29 },
+    { name: "Sudan", population: 45657202, birthRate: 33, deathRate: 7, lifeExpectancy: 65, urbanPopulation: 35, medianAge: 20 },
+    { name: "Iraq", population: 42164965, birthRate: 28, deathRate: 5, lifeExpectancy: 70, urbanPopulation: 71, medianAge: 21 },
+    { name: "Afghanistan", population: 41128771, birthRate: 36, deathRate: 7, lifeExpectancy: 64, urbanPopulation: 26, medianAge: 18 },
+    { name: "Poland", population: 37797000, birthRate: 9, deathRate: 10, lifeExpectancy: 78, urbanPopulation: 60, medianAge: 42 },
+    { name: "Canada", population: 38388400, birthRate: 10, deathRate: 8, lifeExpectancy: 82, urbanPopulation: 81, medianAge: 41 },
+    { name: "Morocco", population: 37344795, birthRate: 18, deathRate: 5, lifeExpectancy: 76, urbanPopulation: 63, medianAge: 30 },
+    { name: "Saudi Arabia", population: 35844909, birthRate: 17, deathRate: 3, lifeExpectancy: 75, urbanPopulation: 84, medianAge: 32 },
+    { name: "Uzbekistan", population: 34081450, birthRate: 22, deathRate: 5, lifeExpectancy: 71, urbanPopulation: 50, medianAge: 28 },
+    { name: "Peru", population: 33715471, birthRate: 18, deathRate: 6, lifeExpectancy: 76, urbanPopulation: 79, medianAge: 31 },
+    { name: "Malaysia", population: 33181072, birthRate: 16, deathRate: 5, lifeExpectancy: 76, urbanPopulation: 77, medianAge: 30 },
+    { name: "Angola", population: 33933611, birthRate: 43, deathRate: 9, lifeExpectancy: 61, urbanPopulation: 67, medianAge: 17 },
+    { name: "Ghana", population: 32833074, birthRate: 29, deathRate: 7, lifeExpectancy: 64, urbanPopulation: 57, medianAge: 21 },
+    { name: "Mozambique", population: 32969517, birthRate: 38, deathRate: 10, lifeExpectancy: 60, urbanPopulation: 37, medianAge: 17 },
+    { name: "Yemen", population: 30490639, birthRate: 29, deathRate: 6, lifeExpectancy: 66, urbanPopulation: 37, medianAge: 20 },
+    { name: "Nepal", population: 30547580, birthRate: 19, deathRate: 6, lifeExpectancy: 71, urbanPopulation: 21, medianAge: 25 },
+    { name: "Venezuela", population: 28704947, birthRate: 18, deathRate: 6, lifeExpectancy: 72, urbanPopulation: 88, medianAge: 29 },
+    { name: "Madagascar", population: 28427328, birthRate: 32, deathRate: 6, lifeExpectancy: 67, urbanPopulation: 38, medianAge: 20 },
+    { name: "Cameroon", population: 27224244, birthRate: 36, deathRate: 9, lifeExpectancy: 59, urbanPopulation: 56, medianAge: 19 },
+    { name: "Côte d'Ivoire", population: 27053648, birthRate: 36, deathRate: 9, lifeExpectancy: 58, urbanPopulation: 51, medianAge: 19 },
+    { name: "North Korea", population: 25971909, birthRate: 14, deathRate: 9, lifeExpectancy: 72, urbanPopulation: 62, medianAge: 35 },
+    { name: "Australia", population: 25921089, birthRate: 13, deathRate: 7, lifeExpectancy: 83, urbanPopulation: 86, medianAge: 38 },
+    { name: "Niger", population: 25130810, birthRate: 47, deathRate: 9, lifeExpectancy: 62, urbanPopulation: 17, medianAge: 15 },
+    { name: "Sri Lanka", population: 21803000, birthRate: 14, deathRate: 7, lifeExpectancy: 77, urbanPopulation: 18, medianAge: 34 },
+    { name: "Burkina Faso", population: 22100683, birthRate: 37, deathRate: 9, lifeExpectancy: 61, urbanPopulation: 30, medianAge: 18 },
+    { name: "Mali", population: 21473764, birthRate: 41, deathRate: 10, lifeExpectancy: 59, urbanPopulation: 43, medianAge: 16 },
+    { name: "Romania", population: 19237691, birthRate: 9, deathRate: 12, lifeExpectancy: 75, urbanPopulation: 54, medianAge: 43 },
+     { name: "Chile", population: 19458310, birthRate: 12, deathRate: 6, lifeExpectancy: 80, urbanPopulation: 85, medianAge: 35 },
+    { name: "Malawi", population: 19889742, birthRate: 37, deathRate: 7, lifeExpectancy: 64, urbanPopulation: 18, medianAge: 18 },
+    { name: "Kazakhstan", population: 19196465, birthRate: 19, deathRate: 8, lifeExpectancy: 73, urbanPopulation: 58, medianAge: 31 },
+    { name: "Zambia", population: 18920657, birthRate: 35, deathRate: 7, lifeExpectancy: 63, urbanPopulation: 45, medianAge: 18 },
+    { name: "Guatemala", population: 18499939, birthRate: 23, deathRate: 5, lifeExpectancy: 74, urbanPopulation: 52, medianAge: 22 },
+    { name: "Ecuador", population: 17800040, birthRate: 18, deathRate: 5, lifeExpectancy: 76, urbanPopulation: 64, medianAge: 28 },
+    { name: "Netherlands", population: 17501696, birthRate: 10, deathRate: 9, lifeExpectancy: 82, urbanPopulation: 92, medianAge: 43 },
+    { name: "Senegal", population: 17316449, birthRate: 33, deathRate: 6, lifeExpectancy: 68, urbanPopulation: 48, medianAge: 19 },
+    { name: "Cambodia", population: 16926984, birthRate: 21, deathRate: 6, lifeExpectancy: 70, urbanPopulation: 24, medianAge: 26 },
+    { name: "Chad", population: 16914985, birthRate: 43, deathRate: 12, lifeExpectancy: 54, urbanPopulation: 23, medianAge: 16 },
+    { name: "Somalia", population: 16841795, birthRate: 42, deathRate: 11, lifeExpectancy: 57, urbanPopulation: 45, medianAge: 17 },
+    { name: "Zimbabwe", population: 16320537, birthRate: 33, deathRate: 9, lifeExpectancy: 61, urbanPopulation: 32, medianAge: 19 },
+    { name: "Guinea", population: 13531906, birthRate: 37, deathRate: 8, lifeExpectancy: 61, urbanPopulation: 36, medianAge: 19 },
+    { name: "Rwanda", population: 13461888, birthRate: 30, deathRate: 6, lifeExpectancy: 69, urbanPopulation: 17, medianAge: 20 },
+    { name: "Benin", population: 12704726, birthRate: 36, deathRate: 8, lifeExpectancy: 61, urbanPopulation: 48, medianAge: 19 },
+    { name: "Burundi", population: 12551213, birthRate: 38, deathRate: 7, lifeExpectancy: 61, urbanPopulation: 13, medianAge: 17 },
+    { name: "Tunisia", population: 12004649, birthRate: 17, deathRate: 6, lifeExpectancy: 76, urbanPopulation: 69, medianAge: 33 },
+    { name: "Bolivia", population: 12079472, birthRate: 22, deathRate: 6, lifeExpectancy: 71, urbanPopulation: 70, medianAge: 26 },
+    { name: "Belgium", population: 11611419, birthRate: 11, deathRate: 10, lifeExpectancy: 81, urbanPopulation: 98, medianAge: 42 },
+    { name: "Haiti", population: 11577779, birthRate: 23, deathRate: 8, lifeExpectancy: 64, urbanPopulation: 57, medianAge: 24 },
+  { name: "Jordan", population: 11285869, birthRate: 23, deathRate: 4, lifeExpectancy: 74, urbanPopulation: 91, medianAge: 24 },
+  { name: "Cuba", population: 11256372, birthRate: 10, deathRate: 9, lifeExpectancy: 79, urbanPopulation: 77, medianAge: 42 },
+  { name: "Czech Republic", population: 10724555, birthRate: 9, deathRate: 10, lifeExpectancy: 79, urbanPopulation: 74, medianAge: 43 },
+  { name: "Greece", population: 10384971, birthRate: 8, deathRate: 11, lifeExpectancy: 82, urbanPopulation: 79, medianAge: 45 },
+  { name: "Portugal", population: 10270865, birthRate: 8, deathRate: 11, lifeExpectancy: 81, urbanPopulation: 66, medianAge: 46 },
+  { name: "Sweden", population: 10415811, birthRate: 11, deathRate: 9, lifeExpectancy: 82, urbanPopulation: 88, medianAge: 41 },
+  { name: "Hungary", population: 9684679, birthRate: 9, deathRate: 13, lifeExpectancy: 76, urbanPopulation: 72, medianAge: 43 },
+  { name: "Belarus", population: 9432800, birthRate: 10, deathRate: 13, lifeExpectancy: 74, urbanPopulation: 79, medianAge: 40 },
+  { name: "Dominican Republic", population: 11117873, birthRate: 19, deathRate: 6, lifeExpectancy: 74, urbanPopulation: 82, medianAge: 28 },
+  { name: "Austria", population: 8935112, birthRate: 9, deathRate: 9, lifeExpectancy: 81, urbanPopulation: 58, medianAge: 43 },
+  { name: "Switzerland", population: 8691406, birthRate: 10, deathRate: 8, lifeExpectancy: 83, urbanPopulation: 74, medianAge: 43 },
+  { name: "Israel", population: 9038300, birthRate: 21, deathRate: 5, lifeExpectancy: 83, urbanPopulation: 93, medianAge: 30 },
+  { name: "Hong Kong", population: 7481500, birthRate: 8, deathRate: 6, lifeExpectancy: 85, urbanPopulation: 100, medianAge: 45 },
+  { name: "Singapore", population: 5703600, birthRate: 9, deathRate: 5, lifeExpectancy: 83, urbanPopulation: 100, medianAge: 42 },
+  { name: "Denmark", population: 5822763, birthRate: 11, deathRate: 9, lifeExpectancy: 81, urbanPopulation: 88, medianAge: 42 },
+  { name: "Finland", population: 5540720, birthRate: 9, deathRate: 10, lifeExpectancy: 81, urbanPopulation: 85, medianAge: 43 },
+  { name: "Norway", population: 5408320, birthRate: 12, deathRate: 8, lifeExpectancy: 82, urbanPopulation: 83, medianAge: 39 },
+  { name: "New Zealand", population: 5122600, birthRate: 13, deathRate: 7, lifeExpectancy: 82, urbanPopulation: 87, medianAge: 38 },
+  { name: "Ireland", population: 4977400, birthRate: 13, deathRate: 6, lifeExpectancy: 82, urbanPopulation: 63, medianAge: 38 },
+  { name: "Costa Rica", population: 5153957, birthRate: 14, deathRate: 5, lifeExpectancy: 80, urbanPopulation: 80, medianAge: 33 },
+  { name: "Panama", population: 4401681, birthRate: 18, deathRate: 5, lifeExpectancy: 78, urbanPopulation: 68, medianAge: 30 },
+  { name: "Kuwait", population: 4310100, birthRate: 14, deathRate: 2, lifeExpectancy: 75, urbanPopulation: 100, medianAge: 37 },
+  { name: "Oman", population: 4520471, birthRate: 20, deathRate: 3, lifeExpectancy: 77, urbanPopulation: 86, medianAge: 30 },
+  { name: "Qatar", population: 2695131, birthRate: 9, deathRate: 1, lifeExpectancy: 80, urbanPopulation: 99, medianAge: 33 },
+  { name: "Uruguay", population: 3485156, birthRate: 13, deathRate: 9, lifeExpectancy: 77, urbanPopulation: 95, medianAge: 36 },
+  { name: "Slovakia", population: 5458827, birthRate: 10, deathRate: 10, lifeExpectancy: 77, urbanPopulation: 54, medianAge: 41 },
+  { name: "Croatia", population: 4105493, birthRate: 9, deathRate: 12, lifeExpectancy: 78, urbanPopulation: 57, medianAge: 44 },
+  { name: "Bulgaria", population: 6924716, birthRate: 9, deathRate: 15, lifeExpectancy: 75, urbanPopulation: 75, medianAge: 45 },
+  { name: "Lebanon", population: 6825442, birthRate: 14, deathRate: 5, lifeExpectancy: 79, urbanPopulation: 88, medianAge: 31 },
+  { name: "Libya", population: 6958539, birthRate: 18, deathRate: 4, lifeExpectancy: 72, urbanPopulation: 78, medianAge: 29 },
+  { name: "Paraguay", population: 7219520, birthRate: 20, deathRate: 5, lifeExpectancy: 74, urbanPopulation: 62, medianAge: 26 },
+  { name: "El Salvador", population: 6486201, birthRate: 18, deathRate: 6, lifeExpectancy: 73, urbanPopulation: 73, medianAge: 28 },
+  { name: "Nicaragua", population: 6850540, birthRate: 18, deathRate: 5, lifeExpectancy: 74, urbanPopulation: 57, medianAge: 26 },
+  { name: "Kyrgyzstan", population: 6524191, birthRate: 22, deathRate: 6, lifeExpectancy: 71, urbanPopulation: 36, medianAge: 26 },
+  { name: "Turkmenistan", population: 6117564, birthRate: 21, deathRate: 6, lifeExpectancy: 68, urbanPopulation: 53, medianAge: 27 },
+  { name: "Georgia", population: 3989175, birthRate: 12, deathRate: 13, lifeExpectancy: 73, urbanPopulation: 58, medianAge: 38 },
+  { name: "Eritrea", population: 3620312, birthRate: 30, deathRate: 7, lifeExpectancy: 66, urbanPopulation: 41, medianAge: 19 },
+  { name: "Mongolia", population: 3329289, birthRate: 20, deathRate: 6, lifeExpectancy: 69, urbanPopulation: 68, medianAge: 28 },
+  { name: "Armenia", population: 2963234, birthRate: 12, deathRate: 9, lifeExpectancy: 75, urbanPopulation: 63, medianAge: 36 },
+  { name: "Albania", population: 2872294, birthRate: 12, deathRate: 7, lifeExpectancy: 78, urbanPopulation: 63, medianAge: 36 },
+  { name: "Lithuania", population: 2722289, birthRate: 9, deathRate: 14, lifeExpectancy: 75, urbanPopulation: 67, medianAge: 43 },
+  { name: "Jamaica", population: 2973461, birthRate: 16, deathRate: 7, lifeExpectancy: 74, urbanPopulation: 56, medianAge: 31 },
+  { name: "Namibia", population: 2587801, birthRate: 26, deathRate: 7, lifeExpectancy: 63, urbanPopulation: 50, medianAge: 21 },
+  { name: "Botswana", population: 2351625, birthRate: 21, deathRate: 9, lifeExpectancy: 69, urbanPopulation: 70, medianAge: 25 },
+  { name: "Lesotho", population: 2142249, birthRate: 24, deathRate: 15, lifeExpectancy: 54, urbanPopulation: 29, medianAge: 24 },
+  { name: "Gabon", population: 2225728, birthRate: 27, deathRate: 6, lifeExpectancy: 66, urbanPopulation: 89, medianAge: 23 },
+  { name: "North Macedonia", population: 2083459, birthRate: 10, deathRate: 10, lifeExpectancy: 76, urbanPopulation: 58, medianAge: 39 },
+  { name: "Slovenia", population: 2078932, birthRate: 9, deathRate: 10, lifeExpectancy: 81, urbanPopulation: 55, medianAge: 44 },
+  { name: "Latvia", population: 1886198, birthRate: 9, deathRate: 14, lifeExpectancy: 75, urbanPopulation: 68, medianAge: 44 },
+  { name: "Guinea-Bissau", population: 1967998, birthRate: 36, deathRate: 8, lifeExpectancy: 58, urbanPopulation: 49, medianAge: 19 },
+  { name: "Bahrain", population: 1701575, birthRate: 13, deathRate: 2, lifeExpectancy: 77, urbanPopulation: 89, medianAge: 32 },
+  { name: "Trinidad and Tobago", population: 1399491, birthRate: 12, deathRate: 8, lifeExpectancy: 73, urbanPopulation: 53, medianAge: 36 },
+  { name: "Estonia", population: 1326535, birthRate: 10, deathRate: 12, lifeExpectancy: 78, urbanPopulation: 68, medianAge: 42 },
+  { name: "Mauritius", population: 1271767, birthRate: 10, deathRate: 9, lifeExpectancy: 75, urbanPopulation: 41, medianAge: 37 },
+  { name: "Cyprus", population: 1207359, birthRate: 11, deathRate: 7, lifeExpectancy: 80, urbanPopulation: 67, medianAge: 37 },
+  { name: "Eswatini", population: 1160164, birthRate: 25, deathRate: 10, lifeExpectancy: 60, urbanPopulation: 24, medianAge: 21 },
+  { name: "Djibouti", population: 988002, birthRate: 23, deathRate: 7, lifeExpectancy: 67, urbanPopulation: 78, medianAge: 25 },
+  { name: "Fiji", population: 896444, birthRate: 19, deathRate: 6, lifeExpectancy: 67, urbanPopulation: 56, medianAge: 28 },
+  { name: "Comoros", population: 869595, birthRate: 28, deathRate: 7, lifeExpectancy: 64, urbanPopulation: 29, medianAge: 20 },
+  { name: "Guyana", population: 786559, birthRate: 20, deathRate: 7, lifeExpectancy: 70, urbanPopulation: 27, medianAge: 26 },
+  { name: "Bhutan", population: 771612, birthRate: 16, deathRate: 6, lifeExpectancy: 71, urbanPopulation: 42, medianAge: 28 },
+  { name: "Solomon Islands", population: 686878, birthRate: 27, deathRate: 4, lifeExpectancy: 73, urbanPopulation: 23, medianAge: 21 },
+  { name: "Macao", population: 649342, birthRate: 8, deathRate: 4, lifeExpectancy: 84, urbanPopulation: 100, medianAge: 39 },
+  { name: "Montenegro", population: 628062, birthRate: 11, deathRate: 10, lifeExpectancy: 76, urbanPopulation: 67, medianAge: 39 },
+  { name: "Luxembourg", population: 625976, birthRate: 11, deathRate: 7, lifeExpectancy: 82, urbanPopulation: 88, medianAge: 39 },
+  { name: "Suriname", population: 586634, birthRate: 16, deathRate: 6, lifeExpectancy: 71, urbanPopulation: 65, medianAge: 29 },
+  { name: "Cape Verde", population: 555988, birthRate: 19, deathRate: 6, lifeExpectancy: 73, urbanPopulation: 67, medianAge: 27 },
+  { name: "Malta", population: 441539, birthRate: 10, deathRate: 8, lifeExpectancy: 82, urbanPopulation: 95, medianAge: 42 },
+  { name: "Brunei", population: 437483, birthRate: 16, deathRate: 3, lifeExpectancy: 75, urbanPopulation: 78, medianAge: 32 },
+  { name: "Belize", population: 397628, birthRate: 22, deathRate: 4, lifeExpectancy: 74, urbanPopulation: 46, medianAge: 25 },
+  { name: "Bahamas", population: 393248, birthRate: 15, deathRate: 7, lifeExpectancy: 76, urbanPopulation: 83, medianAge: 32 },
+  { name: "Iceland", population: 341250, birthRate: 13, deathRate: 6, lifeExpectancy: 83, urbanPopulation: 94, medianAge: 37 },
+  { name: "Maldives", population: 540542, birthRate: 16, deathRate: 3, lifeExpectancy: 79, urbanPopulation: 40, medianAge: 30 },
+  { name: "Barbados", population: 287371, birthRate: 11, deathRate: 9, lifeExpectancy: 79, urbanPopulation: 31, medianAge: 40 },
+  { name: "Samoa", population: 198410, birthRate: 21, deathRate: 5, lifeExpectancy: 73, urbanPopulation: 18, medianAge: 22 },
+  { name: "Saint Lucia", population: 183629, birthRate: 12, deathRate: 7, lifeExpectancy: 76, urbanPopulation: 19, medianAge: 34 },
+  { name: "Kiribati", population: 119449, birthRate: 22, deathRate: 7, lifeExpectancy: 66, urbanPopulation: 53, medianAge: 23 },
+  { name: "Grenada", population: 112519, birthRate: 14, deathRate: 8, lifeExpectancy: 72, urbanPopulation: 36, medianAge: 32 },
+  { name: "Tonga", population: 105697, birthRate: 21, deathRate: 5, lifeExpectancy: 71, urbanPopulation: 23, medianAge: 22 },
+  { name: "Seychelles", population: 98347, birthRate: 14, deathRate: 7, lifeExpectancy: 73, urbanPopulation: 56, medianAge: 34 },
+  { name: "Antigua and Barbuda", population: 97928, birthRate: 15, deathRate: 6, lifeExpectancy: 77, urbanPopulation: 24, medianAge: 34 },
+  { name: "Andorra", population: 77265, birthRate: 7, deathRate: 4, lifeExpectancy: 83, urbanPopulation: 88, medianAge: 46 },
+  { name: "Dominica", population: 71991, birthRate: 13, deathRate: 8, lifeExpectancy: 78, urbanPopulation: 70, medianAge: 34 },
+  { name: "Saint Kitts and Nevis", population: 53199, birthRate: 12, deathRate: 7, lifeExpectancy: 76, urbanPopulation: 32, medianAge: 36 },
+  { name: "Marshall Islands", population: 59190, birthRate: 23, deathRate: 4, lifeExpectancy: 73, urbanPopulation: 70, medianAge: 23 },
+  { name: "Liechtenstein", population: 38128, birthRate: 10, deathRate: 7, lifeExpectancy: 82, urbanPopulation: 14, medianAge: 43 },
+  { name: "Monaco", population: 39244, birthRate: 6, deathRate: 10, lifeExpectancy: 89, urbanPopulation: 100, medianAge: 55 },
+  { name: "San Marino", population: 33936, birthRate: 9, deathRate: 8, lifeExpectancy: 83, urbanPopulation: 97, medianAge: 46 },
+  { name: "Palau", population: 18094, birthRate: 11, deathRate: 8, lifeExpectancy: 73, urbanPopulation: 81, medianAge: 33 },
+  { name: "Tuvalu", population: 11792, birthRate: 23, deathRate: 7, lifeExpectancy: 66, urbanPopulation: 62, medianAge: 26 },
+  { name: "Nauru", population: 10824, birthRate: 24, deathRate: 6, lifeExpectancy: 66, urbanPopulation: 100, medianAge: 26 },
+  { name: "Vatican City", population: 825, birthRate: 0, deathRate: 0, lifeExpectancy: 0, urbanPopulation: 100, medianAge: 0 }
+      ];
+
+      const countryList = document.getElementById("country-list");
+      const searchInput = document.getElementById("search");
+
+      // Function to render country list
+      function renderCountries(filteredCountries) {
+        countryList.innerHTML = "";
+        filteredCountries.forEach(country => {
+          const countryDiv = document.createElement('div');
+          countryDiv.className = 'country';
+          countryDiv.innerHTML = `
+            <h2>${country.name}</h2>
+            <p><strong>Population:</strong> ${country.population.toLocaleString()}</p>
+            <p><strong>Birth Rate:</strong> ${country.birthRate} per 1,000 people</p>
+            <p><strong>Death Rate:</strong> ${country.deathRate} per 1,000 people</p>
+            <p><strong>Life Expectancy:</strong> ${country.lifeExpectancy} years</p>
+            <p><strong>Urban Population:</strong> ${country.urbanPopulation}%</p>
+            <p><strong>Median Age:</strong> ${country.medianAge} years</p>
+          `;
+          countryList.appendChild(countryDiv);
+        });
+      }
+
+      // Sort by population and render initially
+      countries.sort((a, b) => b.population - a.population);
+      renderCountries(countries);
+
+      // Search functionality
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.toLowerCase();
+        const filtered = countries.filter(c => c.name.toLowerCase().includes(query));
+        renderCountries(filtered);
+      });
+
+      // Populate comparison dropdowns
+      const country1Select = document.getElementById('country1');
+      const country2Select = document.getElementById('country2');
+      countries.forEach(country => {
+        const option1 = document.createElement('option');
+        option1.value = country.name;
+        option1.textContent = country.name;
+        country1Select.appendChild(option1);
+
+        const option2 = document.createElement('option');
+        option2.value = country.name;
+        option2.textContent = country.name;
+        country2Select.appendChild(option2);
+      });
+
+      // Comparison functionality
+      const compareButton = document.querySelector('.compare-button');
+      compareButton.addEventListener('click', () => {
+        const country1Name = country1Select.value;
+        const country2Name = country2Select.value;
+
+        const country1 = countries.find(c => c.name === country1Name);
+        const country2 = countries.find(c => c.name === country2Name);
+
+        if (country1 && country2) {
+          const compareCountry1 = document.getElementById('compare-country1');
+          const compareCountry2 = document.getElementById('compare-country2');
+          const summaryText = document.getElementById('summary-text');
+
+          compareCountry1.innerHTML = `
+            <h2>${country1.name}</h2>
+            <p><strong>Population:</strong> ${country1.population.toLocaleString()}</p>
+            <p><strong>Birth Rate:</strong> ${country1.birthRate} per 1,000</p>
+            <p><strong>Death Rate:</strong> ${country1.deathRate} per 1,000</p>
+            <p><strong>Life Expectancy:</strong> ${country1.lifeExpectancy} years</p>
+            <p><strong>Urban Population:</strong> ${country1.urbanPopulation}%</p>
+            <p><strong>Median Age:</strong> ${country1.medianAge} years</p>
+          `;
+
+          compareCountry2.innerHTML = `
+            <h2>${country2.name}</h2>
+            <p><strong>Population:</strong> ${country2.population.toLocaleString()}</p>
+            <p><strong>Birth Rate:</strong> ${country2.birthRate} per 1,000</p>
+            <p><strong>Death Rate:</strong> ${country2.deathRate} per 1,000</p>
+            <p><strong>Life Expectancy:</strong> ${country2.lifeExpectancy} years</p>
+            <p><strong>Urban Population:</strong> ${country2.urbanPopulation}%</p>
+            <p><strong>Median Age:</strong> ${country2.medianAge} years</p>
+          `;
+
+          const populationDifference = ((country2.population - country1.population) / country1.population) * 100;
+          const growthRateDifference = (country1.birthRate - country1.deathRate) - (country2.birthRate - country2.deathRate);
+
+          summaryText.innerHTML = `
+            <strong>${country2.name}</strong> has a population ${Math.abs(populationDifference).toFixed(1)}% ${populationDifference > 0 ? 'larger' : 'smaller'} than <strong>${country1.name}</strong>.<br>
+            <strong>${country1.name}</strong> is growing ${growthRateDifference > 0 ? 'faster' : 'slower'} with a net growth rate that is ${Math.abs(growthRateDifference).toFixed(1)} points ${growthRateDifference > 0 ? 'higher' : 'lower'} per 1,000 people than <strong>${country2.name}</strong>.
+          `;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
